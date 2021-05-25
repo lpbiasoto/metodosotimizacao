@@ -1,18 +1,5 @@
 import gurobipy as gb
 
-####
-#   Benders decomposition via Gurobi + Python
-#   Example 3.1 from Conejo et al.'s book on optimization techniques
-####
-
-##
-# To Run:
-# m = Benders_Master()
-# m.optimize()
-##
-
-
-# Class which can have attributes set.
 class expando(object):
     pass
 
@@ -78,10 +65,6 @@ class Benders_Master:
             print(soma1, self.variables.z.x,soma1+self.variables.z.x )
         pass
 
-    ###
-    #   Loading functions
-    ###
-
     def _load_data(self, benders_gap=0.001):
         self.data.cutlist = []
         self.data.upper_bounds = []
@@ -97,9 +80,6 @@ class Benders_Master:
         self.data.xs = []
         self.data.zs = []
 
-    ###
-    #   Model Building
-    ###
     def _build_model(self):
         self.model = gb.Model()
         self._build_variables()
@@ -163,9 +143,6 @@ class Benders_Master:
         self.constraints.cuts = {}
         pass
 
-    ###
-    # Cut adding
-    ###
     def _add_cut(self):
         y = self.variables.y
         cut = len(self.data.cutlist)
@@ -239,9 +216,6 @@ class Benders_Master:
         obj_master = self.model.ObjVal
         self.data.ub = minimo(obj_sub,self.data.ub)
 
-            # sum([self.variables.z[x].x for x in self.variables.z]) \
-        # The best lower bound is the current bestbound,
-        # This will equal z_master at optimality
         self.data.lb = obj_master
         self.data.upper_bounds.append(self.data.ub)
         self.data.lower_bounds.append(self.data.lb)
