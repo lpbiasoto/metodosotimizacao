@@ -56,13 +56,18 @@ class Benders_Master:
             self._update_bounds()
             self._save_vars()
             print(self.data.ys[len(self.data.cutlist)-1])
-            print(self.data.ub, self.data.lb, len(self.data.cutlist))
+            print("Upper Bound: ",self.data.ub)
+            print("Lower Bound: ",self.data.lb)
+            print("Iteração: ", len(self.data.cutlist))
             soma1 =0 
             soma2 =0 
             for i in range(1,6):
                 for t in range(1,11):
                     soma1 = soma1 + m.data.s[i]*m.variables.y[i,t].x
-            print(soma1, self.variables.z.x,soma1+self.variables.z.x )
+            print("Custo Yit: ",soma1)
+            print("Obj Subproblema: ", self.submodel.model.ObjVal)
+            print("Variável Z: ",self.variables.z.x)
+            print("Obj Problema Mestre: ",self.model.ObjVal )
         pass
 
     def _load_data(self, benders_gap=0.001):
@@ -119,7 +124,7 @@ class Benders_Master:
 
         m._z = \
             m.addVar(
-            lb=-1000, ub=gb.GRB.INFINITY,
+            lb=-gb.GRB.INFINITY, ub=gb.GRB.INFINITY, #assume-se que z > 0, pois sabemos que o custo de hiIit da obj original é maior que 0
             vtype = gb.GRB.CONTINUOUS,
             name = "z")
     
@@ -212,7 +217,13 @@ class Benders_Master:
     # Update upper and lower bounds
     ###
     def _update_bounds(self):
-        obj_sub = self.submodel.model.ObjVal
+        
+        custo_y =0 
+        for i in range(1,6):
+            for t in range(1,11):
+                custo_y = custo_y + m.data.s[i]*m.variables.y[i,t].x
+
+        obj_sub = self.submodel.model.ObjVal + custo_y
         obj_master = self.model.ObjVal
         self.data.ub = minimo(obj_sub,self.data.ub)
 
