@@ -31,7 +31,7 @@ class ProblemData():
         for t in time:
             d_tau[i] = d_tau[i] + d[i,t]
 
-class Benders_Master:
+class Relax_and_Fix:
     def __init__(self, t, prev_m, bloco):
         self.bloco = bloco
         self.iter = t
@@ -200,7 +200,7 @@ prev_m = None
 bloco = 1
 periodos = range(1,12)
 for t in periodos:
-    m = Benders_Master(t, prev_m, bloco)
+    m = Relax_and_Fix(t, prev_m, bloco)
     m.optimize()
     prev_m = m
 soma1 =0 
