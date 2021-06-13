@@ -198,7 +198,7 @@ class Relax_and_Fix:
 
 prev_m = None
 bloco = 1
-periodos = range(1,12)
+periodos = range(bloco,11+bloco,1*bloco)
 for t in periodos:
     m = Relax_and_Fix(t, prev_m, bloco)
     m.optimize()
